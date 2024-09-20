@@ -14,6 +14,7 @@ function App() {
 
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   //   Читаю з права наліво:
   // Даю запит на сервер
@@ -28,12 +29,18 @@ function App() {
         setIsLoading(true);
         // 2. Прийшли дані
         const data = await fetchArticles();
-        // 3. Скидаємо завантаження
-        setIsLoading(false);
+        // 3. Скидаємо завантаження, але в цьому блоці не пишемо
+        // setIsLoading(false);
+        //Кидаю його в блок finally, який спрацьовує і в try, і в catch
         //4.Записую дані в стейт
         setArticles(data.hits);
-      } catch (error) {
-        console.log("error", error);
+        //Щоб точно не показувалась помилка, де її немає, бо з новим запитом має зникнути все старе
+        setIsError(false);
+      } catch {
+        setIsError(true);
+        // Якщо помилка, то не показувати лоадер, а просто виводити повідомлення про помилку
+      } finally {
+        setIsLoading(false);
       }
     };
     getData();
@@ -63,6 +70,7 @@ function App() {
       {articles.length > 0 && <ArticlesList articles={articles} />}
 
       {isLoading && <Loader />}
+      {isError && <h2>Smth is wrong. ERROR</h2>}
     </div>
   );
 }
