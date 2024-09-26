@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchArticles } from "./services/api";
 import ArticlesList from "./components/ArticlesList/ArticlesList";
 import Loader from "./components/Loader/Loader";
+import SearchBar from "./SearchBar/SearchBar";
 
 function App() {
   //Це function зробленa методом аксіос. Але ми вчимо інший метод, тому коментую
@@ -16,7 +17,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [page, setPage] = useState(0);
-  // const [totalPages, setTotalPages] = useState(0);
+
+  const [query, setQuery] = useState("css");
 
   //   Читаю з права наліво:
   // Даю запит на сервер
@@ -30,7 +32,7 @@ function App() {
         // 1. Зробили завантаження
         setIsLoading(true);
         // 2. Прийшли дані
-        const data = await fetchArticles(page);
+        const data = await fetchArticles(page, query);
         // 3. Скидаємо завантаження, але в цьому блоці не пишемо
         // setIsLoading(false);
         //Кидаю його в блок finally, який спрацьовує і в try, і в catch
@@ -46,16 +48,28 @@ function App() {
       }
     };
     getData();
-  }, [page]);
+  }, [page, query]);
 
   const handleChangePage = () => {
     setPage((prev) => prev + 1);
+  };
+
+  //При введенні нового слова в пошук маємо починати його з першої сторінки (setPage(0)),
+  //починати з порожнього масиву статей(setArticles([]))
+  const handleSetQuery = (topic) => {
+    // SearchBar
+    // const handleSubmit = …
+    // setQuery (values.query) - значення що передається в формі далі передається як topic (можу назвати як завгодно)
+    setQuery(topic);
+    setArticles([]);
+    setPage(0);
   };
 
   return (
     <div>
       <h2>HTTP</h2>
 
+      <SearchBar setQuery={handleSetQuery} />
       {/* «Якщо даних нема (articles.length=0), то показуй нічого (null) */}
       {articles.length > 0 && <ArticlesList articles={articles} />}
 
