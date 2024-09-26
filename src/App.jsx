@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchArticles } from "./services/api";
 import ArticlesList from "./components/ArticlesList/ArticlesList";
 import Loader from "./components/Loader/Loader";
-import SearchBar from "./SearchBar/SearchBar";
+import SearchBar from "./components/SearchBar/SearchBar";
 
 function App() {
   //Це function зробленa методом аксіос. Але ми вчимо інший метод, тому коментую
