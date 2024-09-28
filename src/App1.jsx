@@ -21,22 +21,39 @@
 
 //Або логін користувача, за допомогою входу можна користуватись штуками, доступними лише після реєстрації
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Header from "./components/Header/Header";
 import ToDoList from "./components/ToDoList/ToDoList";
 import { authContext } from "./context/AuthProvider";
 import { Login } from "./components/Login/Login";
+import Modal from "./components/Modal/Modal";
+import { useToggle } from "./hooks/useToggle";
 
 const App1 = () => {
   const context = useContext(authContext);
+
+  const { isOpen, openModal, closeModal } = useToggle();
+
   //Якщо юзер не залогінився, то повернути форму Логін
   if (!context.user) {
     return <Login />;
   }
+
   return (
     <div>
       <Header />
       <ToDoList />
+      <button onClick={openModal}>Open modal</button>
+      {isOpen && (
+        <Modal onClose={closeModal}>
+          <h2>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam,
+            minus autem accusamus velit aperiam laboriosam officia delectus
+            nobis incidunt, eos numquam harum temporibus obcaecati, non esse
+            eaque vitae! Cumque, libero.
+          </h2>
+        </Modal>
+      )}
     </div>
   );
 };
